@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.exception.ExceptionInfo;
@@ -18,13 +19,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api")
-public class RestApiController {
+@RequestMapping("/api/admin")
+@Secured("ROLE_ADMIN")
+public class RestApiAdminController {
 
     private final UserService userService;
 
     @Autowired
-    public RestApiController(RoleService roleService, UserService userService) {
+    public RestApiAdminController(RoleService roleService, UserService userService) {
         this.userService = userService;
     }
 
@@ -36,13 +38,12 @@ public class RestApiController {
     @PostMapping("/users")
     public ResponseEntity<ExceptionInfo> createUser(@Valid @RequestBody User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            String error = getErrorsFromBindingResult(bindingResult);
-            return new ResponseEntity<>(new ExceptionInfo(error), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         try {
             userService.saveUser(user);
             return new ResponseEntity<>(HttpStatus.OK);
-        }catch (UserUsernameExistException u) {
+        } catch (UserUsernameExistException u) {
             throw new UserUsernameExistException("User with username exist");
         }
     }
@@ -50,19 +51,13 @@ public class RestApiController {
     @DeleteMapping("/users/{id}")
     public ResponseEntity<ExceptionInfo> pageDelete(@PathVariable("id") long id) {
         userService.deleteUserById(id);
-        return new ResponseEntity<>(new ExceptionInfo("User deleted"), HttpStatus.OK);
-    }
-
-    @GetMapping("users/{id}")
-    public ResponseEntity<User> getUser (@PathVariable("id") long id) {
-        User user = userService.getUserById(id);
-        return new ResponseEntity<>(user,HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/user")
-    public ResponseEntity<User> getUserByUsername (Principal principal) {
+    public ResponseEntity<User> getUserByUsername(Principal principal) {
         User user = userService.findByUsername(principal.getName());
-        return new ResponseEntity<>(user,HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PutMapping("/users/{id}")
@@ -70,21 +65,12 @@ public class RestApiController {
                                                   @Valid @RequestBody User user,
                                                   BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            String error = getErrorsFromBindingResult(bindingResult);
-            return new ResponseEntity<>(new ExceptionInfo(error), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         try {
-            String oldPassword = userService.getUserById(id).getPassword();
-            if (oldPassword.equals(user.getPassword())) {
-                System.out.println("TRUE");
-                user.setPassword(oldPassword);
-                userService.updateUser(user);
-            } else {
-                System.out.println("FALSE");
-                userService.saveUser(user);
-            }
+            userService.saveUser(user);
             return new ResponseEntity<>(HttpStatus.OK);
-        }catch (UserUsernameExistException u) {
+        } catch (UserUsernameExistException u) {
             throw new UserUsernameExistException("User with username exist");
         }
     }

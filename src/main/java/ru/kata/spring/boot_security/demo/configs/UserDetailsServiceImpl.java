@@ -5,24 +5,22 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.repository.UserRepo;
+import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
-@Transactional
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService { // Избавился от аннотации @Transactional и добавил приватонсти
 
-    UserRepo userRepo;
+     private UserRepository userRepository;
 
     @Autowired
-    public UserDetailsServiceImpl(UserRepo userRepo) {
-        this.userRepo = userRepo;
+    public UserDetailsServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         try {
-            return userRepo.findByUsername(s);
+            return userRepository.findByUsername(s);
         } catch (UsernameNotFoundException u) {
             throw new UsernameNotFoundException("user not found");
         }

@@ -12,7 +12,7 @@ public class Role implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "role")
+    @Column(name = "role", unique = true) // Сделал поле уникальным
     private String role;
 
     public Role() {

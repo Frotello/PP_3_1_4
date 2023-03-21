@@ -6,8 +6,6 @@ import java.util.List;
 
 public interface UserService {
 
-    void addTestUsers();
-
     List<User> findAllUsers ();
 
     User getUserById(long id);

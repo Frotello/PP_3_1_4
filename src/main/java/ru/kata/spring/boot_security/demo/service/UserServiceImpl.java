@@ -2,81 +2,55 @@ package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.repository.RoleRepo;
-import ru.kata.spring.boot_security.demo.repository.UserRepo;
+import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
-import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Transactional
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService{ // вырезали связь сервиса с RoleRepository
 
-    private final UserRepo userRepo;
-
-    private final RoleRepo roleRepo;
+    private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepo userRepo, RoleRepo roleRepo, PasswordEncoder passwordEncoder) {
-        this.userRepo = userRepo;
-        this.roleRepo = roleRepo;
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    @PostConstruct
-    public void addTestUsers() {
-        Set<Role> roles1 = new HashSet<>();
-        roles1.add(roleRepo.findById(1L).orElse(null));
-        Set<Role> roles2 = new HashSet<>();
-        roles2.add(roleRepo.findById(1L).orElse(null));
-        roles2.add(roleRepo.findById(2L).orElse(null));
-        User user1 = new User("user","user","user@mail.com",  "Vlad","Parker", (byte) 28,roles1);
-        User user2 = new User("admin", "admin", "admin@gmail.com", "Vlad", "Adminovich", (byte) 28, roles2);
-        saveUser(user1);
-        saveUser(user2);
-    }
-
-    @Override
     public List<User> findAllUsers() {
-        return userRepo.findAll();
+        return userRepository.findAll();
     }
 
     @Override
-    public User getUserById(long id) {
-        User user = null;
-        Optional<User> optional = userRepo.findById(id);
-        if(optional.isPresent()) {
-            user = optional.get();
-        }
-        return user;
+    public User getUserById(long id) {  // избавились от временной переменной
+        Optional<User> optional = userRepository.findById(id);
+        return optional.orElse(null);
     }
 
     @Override
     public void saveUser(User user) {
-        userRepo.save(passwordCoder(user));
+        userRepository.save(passwordCoder(user));
     }
 
     @Override
     public void deleteUserById(long id) {
-        userRepo.deleteById(id);
+        userRepository.deleteById(id);
     }
 
     @Override
     public User findByUsername(String username) {
-        return userRepo.findByUsername(username);
+        return userRepository.findByUsername(username);
     }
 
     @Override
     public void updateUser(User user) {
-        userRepo.save(user);
+        userRepository.save(user);
     }
 
     @Override

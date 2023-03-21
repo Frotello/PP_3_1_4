@@ -17,7 +17,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true) // Сделал поле уникальным
     private String username;
 
     @Column(name = "password")

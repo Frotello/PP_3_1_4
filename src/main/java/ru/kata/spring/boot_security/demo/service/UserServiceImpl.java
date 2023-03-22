@@ -49,11 +49,6 @@ public class UserServiceImpl implements UserService{ // вырезали свя�
     }
 
     @Override
-    public void updateUser(User user) {
-        userRepository.save(user);
-    }
-
-    @Override
     public User passwordCoder(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return user;

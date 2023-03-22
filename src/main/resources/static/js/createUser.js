@@ -1,3 +1,4 @@
+
 async function createUser() {
     $('#addUser').click(async () =>  {
         let addUserForm = $('#addForm')
@@ -7,6 +8,8 @@ async function createUser() {
         let surname = addUserForm.find('#surnameCreate').val().trim();
         let age = addUserForm.find('#ageCreate').val().trim();
         let email = addUserForm.find('#emailCreate').val().trim();
+
+
         let checkedRoles = () => {
             let array = []
             let options = document.querySelector('#rolesCreate').options
@@ -15,6 +18,7 @@ async function createUser() {
                     array.push(roleList[i])
                 }
             }
+            console.log(array);
             return array;
         }
         let data = {
@@ -24,7 +28,7 @@ async function createUser() {
             surname: surname,
             age: age,
             email: email,
-            roles: checkedRoles()
+            roles:  checkedRoles()
         }
 
         const response = await userFetch.addNewUser(data);

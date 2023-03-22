@@ -1,7 +1,4 @@
-let roleList = [
-    {id: 1, role: "ROLE_USER"},
-    {id: 2, role: "ROLE_ADMIN"}
-]
+
 let isUser = true;
 
 $(async function () {
@@ -21,9 +18,10 @@ const userFetch = {
         'Content-Type': 'application/json',
         'Referer': null
     },
+    getRoles: async () => await fetch('api/admin/roles'),
     findAllUsers: async () => await fetch('api/admin/users'),
     findUserByUsername: async () => await fetch(`api/admin/user`),
-    findOneUser: async (id) => await fetch(`api/user/users/${id}`),
+    findOneUser: async (id) => await fetch(`api/admin/users/${id}`),
     addNewUser: async (user) => await fetch('api/admin/users', {method: 'POST', headers: userFetch.head, body: JSON.stringify(user)}),
     updateUser: async (user, id) => await fetch(`api/admin/users/${id}`, {method: 'PUT', headers: userFetch.head, body: JSON.stringify(user)}),
     deleteUser: async (id) => await fetch(`api/admin/users/${id}`, {method: 'DELETE', headers: userFetch.head})

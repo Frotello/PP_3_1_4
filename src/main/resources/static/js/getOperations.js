@@ -95,13 +95,33 @@ async function getUsers() {
         defaultModal.modal('show');
     })
 }
+let roleList = []
+
 
 async function getNewUserForm() {
     let button = $(`#addUser`);
-    let form = $(`#addForm`)
+    let form = $(`#addForm`);
+    let rolesSelect = document.querySelector('#rolesCreate');
+
+    // Получаем список ролей с помощью userFetch.getRoles()
+    const rolesResponse = await userFetch.getRoles();
+    const roles = await rolesResponse.json();
+    roleList = roles.map(role => role);
+
+    // Очищаем элемент <select>
+    rolesSelect.innerHTML = '';
+
+    // Добавляем каждую роль в элемент <select>
+    roles.forEach(role => {
+        let option = document.createElement('option');
+        option.value = role.role;
+        option.text = role.role.substr(5);
+        rolesSelect.appendChild(option);
+    });
+
     button.on('click', () => {
-        form.show()
-    })
+        form.show();
+    });
 }
 
 async function getDefaultModal() {

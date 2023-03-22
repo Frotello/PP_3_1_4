@@ -16,7 +16,5 @@ public interface UserService {
 
     User findByUsername(String username);
 
-    void updateUser(User user);
-
     User passwordCoder(User user);
 }

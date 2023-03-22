@@ -45,13 +45,26 @@ async function editUser(modal, id) {
                 <div class="form-group">
                     <label for="roles" class="com-form-label">Role</label>
                     <select multiple id="roles" size="2" class="form-control" style="max-height: 100px">
-                    <option value="ROLE_USER">USER</option>
-                    <option value="ROLE_ADMIN">ADMIN</option>
+
                     </select>
                 </div>
             </form>
         `;
         modal.find('.modal-body').append(bodyForm);
+        const rolesSelect = document.querySelector('#roles');
+
+        userFetch.getRoles()
+            .then(response => response.json())
+            .then(roles => {
+                roles.forEach(role => {
+                    let option = document.createElement('option');
+                    option.value = role.role;
+                    option.text = role.role.substr(5);
+                    rolesSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error(error));
+
     })
 
     $("#editButton").on('click', async () => {

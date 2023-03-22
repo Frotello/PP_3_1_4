@@ -18,16 +18,15 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/api/user")
 @Secured("ROLE_USER")
-public class RestApiUserController {
+public class RestApiUserController { // User теперь имеет доступ только с своим данным
     private final UserService userService;
 
     @Autowired
-    public RestApiUserController(RoleService roleService, UserService userService) {
+    public RestApiUserController(UserService userService) {
         this.userService = userService;
     }
-    @GetMapping("users/{id}")
-    public ResponseEntity<User> getUser(@PathVariable("id") long id) {
-        User user = userService.getUserById(id);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    @GetMapping("users/")
+    public ResponseEntity<User> getUser(Principal principal) {
+        return new ResponseEntity<>(userService.findByUsername(principal.getName()), HttpStatus.OK);
     }
 }

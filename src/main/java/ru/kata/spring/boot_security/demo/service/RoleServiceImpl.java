@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-@Transactional
 public class RoleServiceImpl implements RoleService {
     private final RoleDao roleDao;
 
@@ -26,7 +25,6 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Transactional
     public Set<Role> getSetOfRoles(String[] roleNames) {
         Set<Role> roles = new HashSet<>();
         for (String roleName : roleNames) {

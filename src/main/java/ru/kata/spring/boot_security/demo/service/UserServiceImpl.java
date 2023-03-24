@@ -9,13 +9,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.model.User;
-
-
 import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserDao userDao;
     private final PasswordEncoder passwordEncoder;
@@ -26,7 +23,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.passwordEncoder = passwordEncoder;
         this.userDao = userDao;
     }
-
 
     @Override
     @Transactional

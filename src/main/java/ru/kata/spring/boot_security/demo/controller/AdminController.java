@@ -27,11 +27,9 @@ public class AdminController {
 
     @GetMapping("/admin")
     public String showAdminPage(@AuthenticationPrincipal User user, Model model) {
-        System.out.println("Контроллер админ страницы запущен");
         model.addAttribute("users", userService.listUsers());
         model.addAttribute("user", user);
         model.addAttribute("roles", roleService.getAllRoles());
-        System.out.println("Все данные переданные и ждем страницу");
         return "adminPage";
     }
 
@@ -53,7 +51,6 @@ public class AdminController {
     @PatchMapping("/{id}/update")
     public String update(@ModelAttribute("user") User user
             , @RequestParam(value = "roles") String[] roles) {
-
         user.setRoles(roleService.getSetOfRoles(roles));
         userService.updateUser(user);
         return "redirect:/admin";

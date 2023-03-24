@@ -42,7 +42,7 @@
                     <div class="tab-content" id="tabContent">
                         <ul class="nav nav-tabs">
                             <a class="nav-link active" data-toggle="tab">Users Table</a>
-                            <a class="nav-link" data-toggle="tab" th:href="@{/add}">New User</a>
+                            <a class="nav-link" data-toggle="tab" th:href="@{/admin/add}">New User</a>
                         </ul>
                         <div class="card">
                             <div class="card-header">
@@ -70,7 +70,7 @@
                                         <td th:text="${user.surname}">surname</td>
                                         <td th:text="${user.age}">age</td>
                                         <td th:text="${user.email}">email</td>
-                                        <td th:text="${user.username}">login</td>
+                                        <td th:text="${user.username}">Username</td>
                                         <td th:text="${user.roles}">roles</td>
                                         <td>
                                             <a type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
@@ -92,7 +92,7 @@
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                                 aria-label="Close"></button>
                                                     </div>
-                                                    <form th:method="PATCH" th:action="@{/{id}/update(id=${user.getId()})}" th:object="${user}">
+                                                    <form th:method="PATCH" th:action="@{/admin/{id}/update(id=${user.getId()})}" th:object="${user}">
                                                         <input type="hidden" th:name="id" th:value="${user.id}" />
                                                         <div class="modal-body col-md text-center">
                                                             <br>
@@ -159,7 +159,7 @@
                                                                 aria-label="Close"></button>
                                                     </div>
                                                     <form class="modal-body col-md text-center"
-                                                          th:action="@{/{id}/delete(id=${user.id})}"
+                                                          th:action="@{/admin/{id}/delete(id=${user.id})}"
                                                           th:method="DELETE">
                                                         <div class="modal-body col-md">
                                                             <label for="id"><b>ID</b></label>

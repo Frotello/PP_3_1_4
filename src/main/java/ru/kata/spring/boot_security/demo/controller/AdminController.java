@@ -10,7 +10,7 @@ import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 @Controller
-@RequestMapping
+@RequestMapping("/admin")
 public class AdminController {
     private final UserService userService;
     private final RoleService roleService;
@@ -20,12 +20,8 @@ public class AdminController {
         this.userService = userService;
         this.roleService = roleService;
     }
-    @GetMapping(value = "login")
-    public String loginPage() {
-        return "login";
-    }
 
-    @GetMapping("/admin")
+    @GetMapping
     public String showAdminPage(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("users", userService.listUsers());
         model.addAttribute("user", user);

@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.model.User;
 
 @Controller
-@RequestMapping()
+@RequestMapping("/user")
 public class UserController {
-    @GetMapping("user")
+    @GetMapping()
     public String showUserInfo(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("user", user);
         return "userPage";

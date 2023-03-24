@@ -3,18 +3,22 @@ package ru.kata.spring.boot_security.demo.model;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.util.Set;
 
 
 @Entity
-@Table(name = "role")
+@Table(name = "roles")
 public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "role", unique = true) // Сделал поле уникальным
+    @Column(name = "role")
     private String role;
+
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
 
     public Role() {
     }
@@ -25,6 +29,9 @@ public class Role implements GrantedAuthority {
 
     public Role(String role) {
         this.role = role;
+    }
+    public String userRole(){
+        return role;
     }
 
     public Long getId() {
@@ -39,20 +46,17 @@ public class Role implements GrantedAuthority {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(String userRole) {
         this.role = role;
     }
 
     @Override
     public String getAuthority() {
-        return getRole();
+        return role;
     }
 
     @Override
     public String toString() {
-        return "Role{" +
-                "id=" + id +
-                ", role='" + role + '\'' +
-                '}';
+        return role;
     }
 }

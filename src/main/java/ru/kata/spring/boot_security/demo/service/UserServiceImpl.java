@@ -1,56 +1,60 @@
 package ru.kata.spring.boot_security.demo.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.repository.UserRepository;
+
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
-@Transactional
 @Service
-public class UserServiceImpl implements UserService{ // вырезали связь сервиса с RoleRepository
-
-    private final UserRepository userRepository;
-
+@Transactional
+public class UserServiceImpl implements UserService, UserDetailsService {
+    private final UserDao userDao;
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
+    @Autowired
+    @Lazy
+    public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
+        this.userDao = userDao;
     }
 
-    @Override
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
-    }
 
     @Override
-    public User getUserById(long id) {  // избавились от временной переменной
-        Optional<User> optional = userRepository.findById(id);
-        return optional.orElse(null);
-    }
-
-    @Override
-    public void saveUser(User user) {
-        userRepository.save(passwordCoder(user));
-    }
-
-    @Override
-    public void deleteUserById(long id) {
-        userRepository.deleteById(id);
-    }
-
-    @Override
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
-    @Override
-    public User passwordCoder(User user) {
+    @Transactional
+    public void addUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return user;
+        userDao.addUser(user);
+    }
+
+    @Override
+    @Transactional
+    public void updateUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userDao.updateUser(user);
+    }
+
+    @Override
+    @Transactional
+    public void removeUserById(Long id) {
+        userDao.removeUserById(id);
+    }
+
+    @Override
+    public List<User> listUsers() {
+        return userDao.listUsers();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userDao.getUserByUserName(username);
     }
 }
